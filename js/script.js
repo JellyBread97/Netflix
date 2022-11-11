@@ -1,55 +1,76 @@
-fetch("https://striveschool-api.herokuapp.com/api/movies", {
+const options = {
+  method: "GET",
   headers: {
     Authorization:
       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZkMGFmZGQ0YmUzZDAwMTU4NDYwYjMiLCJpYXQiOjE2NjgxNzAwOTksImV4cCI6MTY2OTM3OTY5OX0.08FdlJbQUIGK31EzdcHvCwcvGvfOH9AfkKqNLIIYU7w",
   },
-});
-
-const loadGenres = () => {
-  fetch("https://striveschool-api.herokuapp.com/api/movies", {
-    headers: {
-      method: "GET",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZkMGFmZGQ0YmUzZDAwMTU4NDYwYjMiLCJpYXQiOjE2NjgxNzAwOTksImV4cCI6MTY2OTM3OTY5OX0.08FdlJbQUIGK31EzdcHvCwcvGvfOH9AfkKqNLIIYU7w",
-    },
-  })
-    .then((response) => response.json())
-    .then((genres) => {
-      console.log(genres);
-      displayGenres(genres);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
 };
 
-const loadMovies = () => {
-  fetch(`https://striveschool-api.herokuapp.com/api/movies/${id}`, {
-    headers: {
-      method: "GET",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzZkMGFmZGQ0YmUzZDAwMTU4NDYwYjMiLCJpYXQiOjE2NjgxNzAwOTksImV4cCI6MTY2OTM3OTY5OX0.08FdlJbQUIGK31EzdcHvCwcvGvfOH9AfkKqNLIIYU7w",
-    },
-  })
-    .then((response) => response.json())
-    .then((movie_genre) => {
-      console.log(movie_genre);
-      displayGenres(movie_genre);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
+async function loadHorror() {
+  const response = await fetch(
+    "https://striveschool-api.herokuapp.com/api/movies/horror",
+    options
+  );
 
-const selectGenre = (genre) => {};
+  const horrorMovies = await response.json();
+  console.log(horrorMovies);
 
-const displayGenres = (genres) => {
-  let mainContainer = document.getElementById("main-container");
+  const containerRow = document.querySelector(
+    "#trending-now > div > div.carousel-item.active > div > div"
+  );
 
-  let newGenre = document.createElement("div");
-
-  genres.forEach((genre) => {
-    newGenre.classList.add("movie-gallery", "m-2");
-    newGenre.innerHTML = `  <h5 class="text-light", "mt-2", "mb-2">Trending Now</h5>`;
+  horrorMovies.forEach((movie) => {
+    const poster = document.createElement("div");
+    poster.className = "col-md-2";
+    poster.innerHTML = `<img class="movie-cover" src=${movie.imageUrl}>`;
+    containerRow.appendChild(poster);
   });
+}
+
+async function loadComedy() {
+  const response = await fetch(
+    "https://striveschool-api.herokuapp.com/api/movies/comedy",
+    options
+  );
+
+  const comedyMovies = await response.json();
+  console.log(comedyMovies);
+
+  const containerRow = document.querySelector(
+    "#watch-it-again > div > div.carousel-item.active > div > div"
+  );
+
+  comedyMovies.forEach((movie) => {
+    const poster = document.createElement("div");
+    poster.className = "col-md-2";
+    poster.innerHTML = `<img class="movie-cover" src=${movie.imageUrl}>`;
+    containerRow.appendChild(poster);
+  });
+}
+
+async function loadAnime() {
+  const response = await fetch(
+    "https://striveschool-api.herokuapp.com/api/movies/anime",
+    options
+  );
+
+  const animeMovies = await response.json();
+  console.log(animeMovies);
+
+  const containerRow = document.querySelector(
+    "#new-releases > div > div:nth-child(1) > div > div"
+  );
+
+  animeMovies.forEach((movie) => {
+    const poster = document.createElement("div");
+    poster.className = "col-md-2";
+    poster.innerHTML = `<img class="movie-cover" src=${movie.imageUrl}>`;
+    containerRow.appendChild(poster);
+  });
+}
+
+window.onload = () => {
+  loadComedy();
+  loadHorror();
+  loadAnime();
 };
